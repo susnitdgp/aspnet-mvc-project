@@ -39,7 +39,7 @@ jobs:
     - name: Publish Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: ASPDotnetCore Download
+        name: ASPDotnetCore-Deploy-Package-Download
         path: ${{env.PACKAGE_PATH}}
       
     - name: Print Success Message
