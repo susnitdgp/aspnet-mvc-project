@@ -1,0 +1,46 @@
+name: Dotnet-Core-MVC-Application-CI-CD-pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  PACKAGE_PATH: './publish'
+  DOTNET_VERSION: '6.0'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check Out Source Code from Repository
+      uses: actions/checkout@v2
+    
+    - name: Setup dotnet Environment
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{env.DOTNET_VERSION}}
+    
+    - name: Display dotnet Version
+      run: dotnet --version
+
+    - name: Install dependencies
+      run: dotnet restore
+
+    - name: Build Project
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Publish App for deployment
+      run: dotnet publish --configuration Release --no-build --output ${{env.PACKAGE_PATH}}
+  
+    - name: Publish Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ASPDotnetCore Download
+        path: ${{env.PACKAGE_PATH}}
+      
+    - name: Print Success Message
+      run: echo "All Done OK"
